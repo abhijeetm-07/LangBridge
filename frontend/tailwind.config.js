@@ -1,6 +1,9 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
     extend: {},
   },
@@ -36,9 +39,6 @@ module.exports = {
       "night",
       "coffee",
       "winter",
-      "dim",
-      "nord",
-      "sunset",
     ],
   },
-};
+}
