@@ -39,13 +39,17 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
-
+// Static file serving for production
 // Static file serving for production
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "frontend/dist")));
+  // Use path.resolve() to get the absolute path to the root directory
+  const rootDir = path.resolve();
+
+  // Point to the frontend dist folder at the root level
+  app.use(express.static(path.join(rootDir, "frontend", "dist")));
 
   app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+    res.sendFile(path.join(rootDir, "frontend", "dist", "index.html"));
   });
 }
 
