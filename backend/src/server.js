@@ -12,20 +12,23 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const __dirname = path.resolve();
+const __dirname = path.resolve(); // Resolves to the project root on Render
 
 app.use(express.json());
 app.use(cookieParser());
 
-// Add your Render URL to this list once it is generated
+// In production, the frontend is served from the same domain,
+// so we only need CORS for local development.
 const allowedOrigins = [
-  "https://lang-bridge-six.vercel.app",
-  "https://lang-bridge-4gqyllh47-abhijeetiyer07-5554s-projects.vercel.app",
+  "http://localhost:5173",
+  "https://langbridge-1.onrender.com", // Replace with your actual Render URL
 ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl)
+      // or if the origin is in our allowed list
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -36,20 +39,19 @@ app.use(
   }),
 );
 
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
-// Static file serving for production
-// Static file serving for production
+
+// Static file serving for Production
 if (process.env.NODE_ENV === "production") {
-  // Use path.resolve() to get the absolute path to the root directory
-  const rootDir = path.resolve();
+  // Serve the frontend build folder located at the root
+  app.use(express.static(path.join(__dirname, "frontend", "dist")));
 
-  // Point to the frontend dist folder at the root level
-  app.use(express.static(path.join(rootDir, "frontend", "dist")));
-
+  // Handle SPA routing: all other routes serve the frontend's index.html
   app.get("*", (req, res) => {
-    res.sendFile(path.join(rootDir, "frontend", "dist", "index.html"));
+    res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
   });
 }
 

@@ -1,7 +1,6 @@
 {
   "name": "langbridge",
   "version": "1.0.0",
-  "main": "index.js",
   "scripts": {
     "build": "npm install --prefix backend && cd frontend && npm install && npm run build",
     "start": "npm run start --prefix backend"
