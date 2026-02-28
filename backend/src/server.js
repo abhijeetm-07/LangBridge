@@ -14,9 +14,20 @@ const PORT = process.env.PORT || 5000;
 const __dirname = path.resolve();
 app.use(express.json());
 app.use(cookieParser());
+const allowedOrigins = [
+  "https://lang-bridge-six.vercel.app",
+  "https://lang-bridge-4gqyllh47-abhijeetiyer07-5554s-projects.vercel.app",
+];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   }),
 );
