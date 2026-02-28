@@ -46,12 +46,14 @@ app.use("/api/chat", chatRoutes);
 
 // Static file serving for Production
 if (process.env.NODE_ENV === "production") {
-  // Serve the frontend build folder located at the root
-  app.use(express.static(path.join(__dirname, "frontend", "dist")));
+  // Use path.join with ".." to go up one level from the backend directory to the root
+  const frontendPath = path.join(__dirname, "..", "frontend", "dist");
 
-  // Handle SPA routing: all other routes serve the frontend's index.html
+  app.use(express.static(frontendPath));
+
+  // Handle SPA routing
   app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+    res.sendFile(path.join(frontendPath, "index.html"));
   });
 }
 
